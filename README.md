@@ -1,2 +1,2 @@
-# COUNTER_R4_to_Database
-OpenRefine instructions for converting COUNTER Release 4 reports into a database-usable format
+# COUNTER R4 to Database
+Each R4 report has its own JSON
