@@ -1,0 +1,128 @@
+[
+    {
+        "op": "core/row-removal",
+        "description": "Remove total rows",
+        "engineConfig": {
+            "facets": [
+                {
+                    "type": "list",
+                    "name": "Title",
+                    "expression": "grel:toString(value==\"Total for all titles\")",
+                    "columnName": "Title",
+                    "invert": false,
+                    "omitBlank": false,
+                    "omitError": false,
+                    "selection": [
+                        {
+                            "v": {
+                                "v": "true",
+                                "l": "true"
+                            }
+                        }
+                    ],
+                    "selectBlank": false,
+                    "selectError": false
+                }
+            ],
+            "mode": "row-based"
+        }
+    }
+    {
+        "op": "core/transpose-columns-into-rows",
+        "description": "Pivot columns with metric data into columns ``Date`` containing the time range and ``Number`` containing the count",
+        "startColumnName": "Reporting Period Total",
+        "columnCount": -1,
+        "ignoreBlankCells": true,
+        "fillDown": true,
+        "separator": null,
+        "keyColumnName": "Date",
+        "valueColumnName": "Number"
+    },
+    {
+        "op": "core/row-removal",
+        "description": "Remove rows with the reporting period total numbers",
+        "engineConfig": {
+            "facets": [
+                {
+                    "type": "list",
+                    "name": "Date",
+                    "expression": "grel:toString(value==\"Reporting Period Total\")",
+                    "columnName": "Date",
+                    "invert": false,
+                    "omitBlank": false,
+                    "omitError": false,
+                    "selection": [
+                        {
+                            "v": {
+                                "v": "true",
+                                "l": "true"
+                            }
+                        }
+                    ],
+                    "selectBlank": false,
+                    "selectError": false
+                }
+            ],
+            "mode": "row-based"
+        }
+    }
+    {
+        "op": "core/text-transform",
+        "description": "Replace `EDT` in date strings with `EST`",
+        "engineConfig": {
+            "facets": [],
+            "mode": "row-based"
+        },
+        "columnName": "Date",
+        "expression": "grel:replace(value,\"EDT\",\"EST\")",
+        "onError": "keep-original",
+        "repeat": false,
+        "repeatCount": 10
+    },
+    {
+        "op": "core/text-transform",
+        "description": "Format values in ``Date`` as dates",
+        "engineConfig": {
+            "facets": [],
+            "mode": "row-based"
+        },
+        "columnName": "Date",
+        "expression": "value.toDate()",
+        "onError": "keep-original",
+        "repeat": false,
+        "repeatCount": 10
+    }
+    {
+        "op": "core/text-transform",
+        "description": "Null the `null` values in ``ISSN``",
+        "engineConfig": {
+            "facets": [
+                {
+                    "type": "list",
+                    "name": "ISSN",
+                    "expression": "value",
+                    "columnName": "ISSN",
+                    "invert": false,
+                    "omitBlank": false,
+                    "omitError": false,
+                    "selection": [
+                        {
+                            "v": {
+                                "v": "null",
+                                "l": "null"
+                            }
+                        }
+                    ],
+                    "selectBlank": false,
+                    "selectError": false
+                }
+            ],
+            "mode": "row-based"
+        },
+        "columnName": "ISSN",
+        "expression": "null",
+        "onError": "keep-original",
+        "repeat": false,
+        "repeatCount": 10
+    }
+]
